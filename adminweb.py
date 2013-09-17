@@ -31,8 +31,8 @@ class Handler(BaseHTTPRequestHandler):
            self.end_headers()
            self.wfile.write("<html><head></head><body style='color:white;background-color:grey'><center>"+baseConfig[5]+" </center><br><center>"+hostname+"</center>") 
            if self.path.endswith("editaarquivo") or  self.path.endswith("executaTarefa") or self.path.endswith("logtail")or self.path.endswith("uploadprepara"):
-             linha=self.path[1]
-             coluna=self.path[2:4]
+             linha=self.path[1:4]
+             coluna=self.path[4:7]
 
            if self.path.endswith("editaarquivo"):
              temp = config[int(linha)][int(coluna)]
@@ -100,7 +100,7 @@ class Handler(BaseHTTPRequestHandler):
                       elif (str(botao[1])=='5'): 
                         acao='uploadprepara'
                          
-                      self.wfile.write("<button "+bstyle+" onclick=\"javascript:if ("+confirm+"){window.document.location='https://"+hostname+":"+baseConfig[1]+"/"+str(x)+str(y).zfill(2)+acao+"'}\">"+botao[0]+"</button>&nbsp;")
+                      self.wfile.write("<button "+bstyle+" onclick=\"javascript:if ("+confirm+"){window.document.location='https://"+hostname+":"+baseConfig[1]+"/"+str(x).zfill(3)+str(y).zfill(3)+acao+"'}\">"+botao[0]+"</button>&nbsp;")
                                             
  
                       
