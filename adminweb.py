@@ -32,7 +32,7 @@ class Handler(BaseHTTPRequestHandler):
            self.wfile.write("<html><head></head><body style='color:white;background-color:grey'><center>"+baseConfig[5]+" </center><br><center>"+hostname+"</center>") 
            if self.path.endswith("editaarquivo") or  self.path.endswith("executaTarefa") or self.path.endswith("logtail")or self.path.endswith("uploadprepara"):
              linha=self.path[1]
-             coluna=self.path[2]
+             coluna=self.path[2:4]
 
            if self.path.endswith("editaarquivo"):
              temp = config[int(linha)][int(coluna)]
@@ -42,6 +42,8 @@ class Handler(BaseHTTPRequestHandler):
 
            elif self.path.endswith("logtail"):
              temp = config[int(linha)][int(coluna)]
+#TODO : Cette ligne pose problème dans certains cas.
+             print temp[2]
              os.system(temp[2]+" >"+caminho+"/logtail.log")             
              f = open(caminho+"/logtail.log","r")
              self.wfile.write("<center><form name='xxx' method='POST' action=''><textarea name='texto' COLS=145 ROWS=20>"+f.read()+"</textarea><br><br></form><button "+bstyle+" onclick='javascript:window.document.location=\"https://"+hostname+":"+baseConfig[1]+"/\"'>"+baseConfig[6]+"</button></center>")
@@ -98,7 +100,7 @@ class Handler(BaseHTTPRequestHandler):
                       elif (str(botao[1])=='5'): 
                         acao='uploadprepara'
                          
-                      self.wfile.write("<button "+bstyle+" onclick=\"javascript:if ("+confirm+"){window.document.location='https://"+hostname+":"+baseConfig[1]+"/"+str(x)+str(y)+acao+"'}\">"+botao[0]+"</button>&nbsp;")
+                      self.wfile.write("<button "+bstyle+" onclick=\"javascript:if ("+confirm+"){window.document.location='https://"+hostname+":"+baseConfig[1]+"/"+str(x)+str(y).zfill(2)+acao+"'}\">"+botao[0]+"</button>&nbsp;")
                                             
  
                       

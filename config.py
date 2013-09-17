@@ -56,7 +56,7 @@ config = [
             ['Interdit',editeur,'/root/proxy/interdit','0'],
             ['Horaires',editeur,'/root/proxy/heures','0'],
             ['Accès',rapport,'tail -500 /var/log/squid/access.log','0'],
-            ['Erreurs',rapport,'cat /var/log/squid/cache.log','0'],
+            ['Erreurs',rapport,'tail -500 /var/log/squid/cache.log','0'],
            ],
 
 #           [
