@@ -126,8 +126,8 @@ class Handler(BaseHTTPRequestHandler):
            form = cgi.FieldStorage(fp=self.rfile,headers=self.headers,environ={'REQUEST_METHOD':'POST','CONTENT_TYPE':self.headers['Content-Type'],})
            self.send_response(200)
            self.send_header('Content-type','text/html; charset=utf-8')
-           linha=self.path[1]
-           coluna=self.path[2]
+           linha=self.path[1:4]
+           coluna=self.path[4:7]
            temp = config[int(linha)][int(coluna)]
            print "Fichier sauvegardé : "+str(temp[2])
            f = open(temp[2],"wb") 
@@ -137,8 +137,8 @@ class Handler(BaseHTTPRequestHandler):
            self.wfile.write("<html><head></head><body style='color:white;background-color:grey'><center>"+baseConfig[5]+"</center>") 
            self.wfile.write("</center><br><br><center>Fichier sauvegardé<br><br><button "+bstyle+" onclick='javascript:window.document.location=\"https://"+hostname+":"+baseConfig[1]+"/\"'>"+baseConfig[6]+"</button></center></body></html>") 
         elif self.path.endswith("uploadarquivo"):
-           linha=self.path[1]
-           coluna=self.path[2]
+           linha=self.path[1:4]
+           coluna=self.path[4:7]
            temp = config[int(linha)][int(coluna)]
            form = cgi.FieldStorage(fp=self.rfile,headers=self.headers,environ={'REQUEST_METHOD':'POST','CONTENT_TYPE':self.headers['Content-Type'],})
            fileitem = form['file'] 
