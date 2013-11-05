@@ -46,19 +46,19 @@ config = [
 
            [
             'Serveur proxy (squid)',
-            ['Arrêter',service,['/etc/init.d/squid34','stop'],'1','Vérifiez les éventuelles erreurs.'],
-            ['Démarrer',service,['/etc/init.d/squid34','start'],'1','Vérifiez les éventuelles erreurs.'],
+            ['Arrêter',service,['/etc/init.d/squid3','stop'],'1','Vérifiez les éventuelles erreurs.'],
+            ['Démarrer',service,['/etc/init.d/squid3','start'],'1','Vérifiez les éventuelles erreurs.'],
             ['Statut',commande,'ps -ef | grep -i squid| grep -vi grep','0','Proxy démarré','Proxy arrêté'],
 #            ['Recharger',service,['/usr/sbin/squid','-k','reconfigure'],'1','Check the log after this operation.'],
             ['Recharger',commande,'cd /root/proxy/ && ./listes.sh','1','Vérifiez les éventuelles erreurs.'],
-            ['Configurer',editeur,'/etc/squid34/squid.conf','0'],
+            ['Configurer',editeur,'/etc/squid3/squid.conf','0'],
             ['Autorisé',editeur,'/root/proxy/autorise','0'],
-            ['Eleves',editeur,'/etc/squid/conf.d/011-eleves.conf','0'],
+            ['Eleves',editeur,'/etc/squid3/conf.d/011-eleves.conf','0'],
             ['Interdit',editeur,'/root/proxy/interdit','0'],
             ['Horaires',editeur,'/root/proxy/heures','0'],
-            ['Interception',editeur,'/etc/squid/conf.d/00-ssl.conf','0'],
-            ['Accès',rapport,'tail -500 /var/log/squid/access.log','0'],
-            ['Erreurs',rapport,'tail -500 /var/log/squid/cache.log','0'],
+            ['Interception',editeur,'/etc/squid3/conf.d/00-ssl.conf','0'],
+            ['Accès',rapport,'tail -500 /var/log/squid3/access.log','0'],
+            ['Erreurs',rapport,'tail -500 /var/log/squid3/cache.log','0'],
            ],
 
 #           [
