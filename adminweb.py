@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 import string,time,subprocess
-import os,sys,cgi,base64,socket,ssl
+import os,sys,cgi,base64,socket,ssl,pam
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 from config import *
@@ -17,8 +17,13 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         caminho = os.path.realpath(os.path.dirname(sys.argv[0]))
         try:
-           basic = base64.b64encode(baseConfig[3]+":"+baseConfig[4])           
-           if self.headers.getheader('Authorization') == None or self.headers.getheader('Authorization') != 'Basic '+basic:
+           basic = base64.b64encode(baseConfig[3]+":"+baseConfig[4])
+	   try:
+              auth = base64.b64decode(self.headers.getheader('Authorization')[6:]).split(":")
+           except:
+              auth = ['','']
+           print auth
+           if not pam.authenticate(auth[0],auth[1]):
               self.send_response(401)
               self.send_header('WWW-Authenticate', 'Basic realm=\"adminWeb\"')
               self.send_header('Content-type', 'text/html; charset=utf-8')
