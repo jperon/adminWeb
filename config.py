@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 #START  CONFIGURATION
 #General Service Configuration - ip (use 0.0.0.0 and keep it generic), port , hostname(do not use,but keep the empty string) , user , password, head of the pages,label of the button that brings the main screen, label of the save button,label of the confirmation, ssl certificate
-baseConfig = ['0.0.0.0','10500','','administrateur','zazovasu','École St-Michel Garicoitz','Page principale','Sauvegarder','Êtes-vous sûr ?','/etc/ssl/routeur.pem']
+baseConfig = ['127.1.0.1','10500','','administrateur','zazovasu','École St-Michel Garicoitz','Page principale','Sauvegarder','Êtes-vous sûr ?','/etc/ssl/routeur.pem']
 
 service = '1'
 commande = '2'

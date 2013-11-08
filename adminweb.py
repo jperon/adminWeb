@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 import string,time,subprocess
 import os,sys,cgi,base64,socket,ssl,pam
+from urlparse import urlparse
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 from config import *
@@ -15,6 +16,11 @@ hostname = socket.gethostname()
 global result
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
+	chemin = str.split(self.path,"/")
+	hostname = str.split(str(self.headers),"\r\n")[0][6:] + "/" + "/".join(chemin[1:-1])
+	self.path = "/" + chemin[-1]
+	print hostname
+	print self.path
         caminho = os.path.realpath(os.path.dirname(sys.argv[0]))
         try:
            basic = base64.b64encode(baseConfig[3]+":"+baseConfig[4])
@@ -22,7 +28,7 @@ class Handler(BaseHTTPRequestHandler):
               auth = base64.b64decode(self.headers.getheader('Authorization')[6:]).split(":")
            except:
               auth = ['','']
-           print auth
+#           print auth
            if not pam.authenticate(auth[0],auth[1]):
               self.send_response(401)
               self.send_header('WWW-Authenticate', 'Basic realm=\"adminWeb\"')
@@ -42,7 +48,7 @@ class Handler(BaseHTTPRequestHandler):
            if self.path.endswith("editaarquivo"):
              temp = config[int(linha)][int(coluna)]
              f = open(temp[2],"rb") 
-             self.wfile.write("<center><form name='arquivoedit' method='POST' action='https://"+hostname+":"+baseConfig[1]+"/"+linha+coluna+"salvaarquivo'><textarea name='texto' COLS=145 ROWS=20>"+f.read()+"</textarea><br><br><button "+bstyle+" onclick=\"javascript:if (confirm('"+baseConfig[8]+"')){document.arquivoupload.submit()};return false;\">"+baseConfig[7]+"</button></form><button "+bstyle+" onclick='javascript:window.document.location=\"https://"+hostname+":"+baseConfig[1]+"/\"'>"+baseConfig[6]+"</button></center>")
+             self.wfile.write("<center><form name='arquivoedit' method='POST' action='https://"+hostname+"/"+linha+coluna+"salvaarquivo'><textarea name='texto' COLS=145 ROWS=20>"+f.read()+"</textarea><br><br><button "+bstyle+" onclick=\"javascript:if (confirm('"+baseConfig[8]+"')){document.arquivoupload.submit()};return false;\">"+baseConfig[7]+"</button></form><button "+bstyle+" onclick='javascript:window.document.location=\"https://"+hostname+"/\"'>"+baseConfig[6]+"</button></center>")
              f.close()
 
            elif self.path.endswith("logtail"):
@@ -51,11 +57,11 @@ class Handler(BaseHTTPRequestHandler):
              print temp[2]
              os.system(temp[2]+" >"+caminho+"/logtail.log")             
              f = open(caminho+"/logtail.log","r")
-             self.wfile.write("<center><form name='xxx' method='POST' action=''><textarea name='texto' COLS=145 ROWS=20>"+f.read()+"</textarea><br><br></form><button "+bstyle+" onclick='javascript:window.document.location=\"https://"+hostname+":"+baseConfig[1]+"/\"'>"+baseConfig[6]+"</button></center>")
+             self.wfile.write("<center><form name='xxx' method='POST' action=''><textarea name='texto' COLS=145 ROWS=20>"+f.read()+"</textarea><br><br></form><button "+bstyle+" onclick='javascript:window.document.location=\"https://"+hostname+"/\"'>"+baseConfig[6]+"</button></center>")
              f.close()
            elif self.path.endswith("uploadprepara"):
              temp = config[int(linha)][int(coluna)]
-             self.wfile.write("<center><form name='arquivoupload' method='POST' enctype=\"multipart/form-data\" action='https://"+hostname+":"+baseConfig[1]+"/"+linha+coluna+"uploadarquivo'><br>"+temp[4]+"<br><input type=\"file\" name=\"file\" size=\""+temp[5]+"\"><br><br><button "+bstyle+" onclick=\"javascript:if (confirm('"+baseConfig[8]+"')){document.arquivoupload.submit()};return false;\">Upload</button></form><button "+bstyle+" onclick='javascript:window.document.location=\"https://"+hostname+":"+baseConfig[1]+"/\"'>"+baseConfig[6]+"</button></center>")
+             self.wfile.write("<center><form name='arquivoupload' method='POST' enctype=\"multipart/form-data\" action='https://"+hostname+"/"+linha+coluna+"uploadarquivo'><br>"+temp[4]+"<br><input type=\"file\" name=\"file\" size=\""+temp[5]+"\"><br><br><button "+bstyle+" onclick=\"javascript:if (confirm('"+baseConfig[8]+"')){document.arquivoupload.submit()};return false;\">Upload</button></form><button "+bstyle+" onclick='javascript:window.document.location=\"https://"+hostname+"/\"'>"+baseConfig[6]+"</button></center>")
            elif self.path.endswith("executaTarefa"):
              # EVOCACAO DO COMANDO
              result=0
@@ -75,7 +81,7 @@ class Handler(BaseHTTPRequestHandler):
                 else:
                    self.wfile.write("<center><br> "+temp[5]+"<br><br><button "+bstyle+" onclick='javascript:history.go(-1)'>"+baseConfig[6]+"</button></center>")
              if tipo == "1":
-                self.wfile.write("<center><br>"+temp[4]+"<br><br><button "+bstyle+" onclick='javascript:window.document.location=\"https://"+hostname+":"+baseConfig[1]+"/\"'>"+baseConfig[6]+"</button></center>")   
+                self.wfile.write("<center><br>"+temp[4]+"<br><br><button "+bstyle+" onclick='javascript:window.document.location=\"https://"+hostname+"/\"'>"+baseConfig[6]+"</button></center>")   
 
 
            else:
@@ -105,7 +111,7 @@ class Handler(BaseHTTPRequestHandler):
                       elif (str(botao[1])=='5'): 
                         acao='uploadprepara'
                          
-                      self.wfile.write("<button "+bstyle+" onclick=\"javascript:if ("+confirm+"){window.document.location='https://"+hostname+":"+baseConfig[1]+"/"+str(x).zfill(3)+str(y).zfill(3)+acao+"'}\">"+botao[0]+"</button>&nbsp;")
+                      self.wfile.write("<button "+bstyle+" onclick=\"javascript:if ("+confirm+"){window.document.location='https://"+hostname+"/"+str(x).zfill(3)+str(y).zfill(3)+acao+"'}\">"+botao[0]+"</button>&nbsp;")
                                             
  
                       
@@ -140,7 +146,7 @@ class Handler(BaseHTTPRequestHandler):
            f.close()
            self.end_headers()
            self.wfile.write("<html><head></head><body style='color:white;background-color:grey'><center>"+baseConfig[5]+"</center>") 
-           self.wfile.write("</center><br><br><center>Fichier sauvegardé<br><br><button "+bstyle+" onclick='javascript:window.document.location=\"https://"+hostname+":"+baseConfig[1]+"/\"'>"+baseConfig[6]+"</button></center></body></html>") 
+           self.wfile.write("</center><br><br><center>Fichier sauvegardé<br><br><button "+bstyle+" onclick='javascript:window.document.location=\"https://"+hostname+"/\"'>"+baseConfig[6]+"</button></center></body></html>") 
         elif self.path.endswith("uploadarquivo"):
            linha=self.path[1:4]
            coluna=self.path[4:7]
@@ -154,7 +160,7 @@ class Handler(BaseHTTPRequestHandler):
            self.send_response(200)
            self.end_headers()
            self.wfile.write("<html><head></head><body style='color:white;background-color:grey'><center>"+baseConfig[5]+"</center>")
-           self.wfile.write("</center><br><br><center>"+temp[6]+"<br><br><button "+bstyle+" onclick='javascript:window.document.location=\"https://"+hostname+":"+baseConfig[1]+"/\"'>"+baseConfig[6]+"</button></center></body></html>")
+           self.wfile.write("</center><br><br><center>"+temp[6]+"<br><br><button "+bstyle+" onclick='javascript:window.document.location=\"https://"+hostname+"/\"'>"+baseConfig[6]+"</button></center></body></html>")
 
       except Exception , e:
           print e
@@ -163,7 +169,7 @@ class Handler(BaseHTTPRequestHandler):
 
 def main ():
     try:
-        server = HTTPServer(('',int(baseConfig[1])), Handler)
+        server = HTTPServer((baseConfig[0],int(baseConfig[1])), Handler)
 	server.socket = ssl.wrap_socket(server.socket, certfile=baseConfig[9], server_side=True)
         server.serve_forever()
     except Exception , e:
