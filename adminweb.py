@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # -*- coding: UTF-8 -*-
 import string,time,subprocess
 import os,sys,cgi,base64,socket,ssl,pam
@@ -19,8 +19,6 @@ class Handler(BaseHTTPRequestHandler):
 	chemin = str.split(self.path,"/")
 	hostname = str.split(str(self.headers),"\r\n")[0][6:] + "/" + "/".join(chemin[1:-1])
 	self.path = "/" + chemin[-1]
-	print hostname
-	print self.path
         caminho = os.path.realpath(os.path.dirname(sys.argv[0]))
         try:
            basic = base64.b64encode(baseConfig[3]+":"+baseConfig[4])
@@ -137,6 +135,9 @@ class Handler(BaseHTTPRequestHandler):
            form = cgi.FieldStorage(fp=self.rfile,headers=self.headers,environ={'REQUEST_METHOD':'POST','CONTENT_TYPE':self.headers['Content-Type'],})
            self.send_response(200)
            self.send_header('Content-type','text/html; charset=utf-8')
+           chemin = str.split(self.path,"/")
+           hostname = str.split(str(self.headers),"\r\n")[0][6:] + "/" + "/".join(chemin[1:-1])
+           self.path = "/" + chemin[-1]
            linha=self.path[1:4]
            coluna=self.path[4:7]
            temp = config[int(linha)][int(coluna)]
